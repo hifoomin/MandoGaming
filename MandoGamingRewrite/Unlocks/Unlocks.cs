@@ -139,6 +139,7 @@ namespace MandoGamingRewrite.Unlocks
             heavyTap = ScriptableObject.CreateInstance<UnlockableDef>();
             heavyTap.achievementIcon = Main.mandogaming.LoadAsset<Sprite>("HeavyTap.png");
             heavyTap.cachedName = "Commando.Skills_HeavyTap";
+            heavyTap.nameToken = "ACHIEVEMENT_COMMANDOHEAVYTAP_NAME";
 
             LanguageAPI.Add("ACHIEVEMENT_COMMANDOHEAVYTAP_NAME", "Commando: Still Here");
             LanguageAPI.Add("ACHIEVEMENT_COMMANDOHEAVYTAP_DESCRIPTION", "As Commando, complete a Teleporter Event without using your Primary skill.");
@@ -146,6 +147,7 @@ namespace MandoGamingRewrite.Unlocks
             plasmaTap = ScriptableObject.CreateInstance<UnlockableDef>();
             plasmaTap.achievementIcon = Main.mandogaming.LoadAsset<Sprite>("PlasmaTap.png");
             plasmaTap.cachedName = "Commando.Skills_PlasmaTap";
+            plasmaTap.nameToken = "ACHIEVEMENT_COMMANDOPLASMATAP_NAME";
 
             LanguageAPI.Add("ACHIEVEMENT_COMMANDOPLASMATAP_NAME", "Commando: Flatline");
             LanguageAPI.Add("ACHIEVEMENT_COMMANDOPLASMATAP_DESCRIPTION", "As Commando, zap enemies with chain lightning 100 times in a single run.");
