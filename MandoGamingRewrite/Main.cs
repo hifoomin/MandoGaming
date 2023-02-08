@@ -4,6 +4,7 @@ using BepInEx.Logging;
 using MandoGamingRewrite.EntityStates;
 using MandoGamingRewrite.Keywords;
 using MandoGamingRewrite.Projectiles;
+using MandoGamingRewrite.Unlocks;
 using R2API;
 using R2API.ContentManagement;
 using System;
@@ -37,6 +38,7 @@ namespace MandoGaming
 
             mandogaming = AssetBundle.LoadFromFile(Assembly.GetExecutingAssembly().Location.Replace("MandoGamingRewrite.dll", "mandogaming"));
 
+            Unlocks.Create();
             Keywords.Create();
             HeavyTapTracer.Create();
             PlasmaTapTracer.Create();

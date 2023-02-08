@@ -1,4 +1,5 @@
 ﻿using EntityStates;
+using MandoGaming.Skills;
 using R2API;
 using RoR2;
 using RoR2.Skills;
@@ -33,6 +34,7 @@ namespace MandoGaming
         public abstract SkillSlot SkillSlot { get; }
 
         public virtual bool isEnabled { get; } = true;
+        public abstract UnlockableDef UnlockableDef { get; }
 
         public SkillDef skillDef;
 
@@ -84,9 +86,11 @@ namespace MandoGaming
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = skillDef,
-                unlockableName = "",
+                unlockableDef = UnlockableDef,
                 viewableNode = new ViewablesCatalog.Node(skillDef.skillNameToken, false, null)
             };
+
+            Main.MandoGamingLogger.LogFatal("UnlockableDef in SkillDefBase class is " + UnlockableDef);
 
             /*
             var networkStateMachine = commandoSkillLocator.gameObject.GetComponent<NetworkStateMachine>();

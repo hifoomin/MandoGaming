@@ -2,6 +2,7 @@
 using RoR2;
 using UnityEngine;
 using MandoGamingRewrite.EntityStates;
+using MandoGamingRewrite.Unlocks;
 
 namespace MandoGaming.Skills
 {
@@ -44,5 +45,6 @@ namespace MandoGaming.Skills
         public override int RequiredStock => 1;
 
         public override SkillSlot SkillSlot => SkillSlot.Primary;
+        public override UnlockableDef UnlockableDef => Unlocks.plasmaTap;
     }
 }
