@@ -7,6 +7,7 @@ using MandoGamingRewrite.Projectiles;
 using MandoGamingRewrite.Unlocks;
 using R2API;
 using R2API.ContentManagement;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace MandoGaming
 
         public const string PluginAuthor = "HIFU";
         public const string PluginName = "MandoGaming";
-        public const string PluginVersion = "1.3.0";
+        public const string PluginVersion = "1.4.0";
 
         public static ConfigFile MandoGamingConfig;
         public static ManualLogSource MandoGamingLogger;
@@ -60,6 +61,7 @@ namespace MandoGaming
 
             ContentAddition.AddEntityState(typeof(HeavyTapState), out _);
             ContentAddition.AddEntityState(typeof(PlasmaTapState), out _);
+            ContentAddition.AddEntityState(typeof(PRFRVWildfireStormState), out _);
         }
 
         public bool ValidateSkillDef(SkillDefBase sdb)

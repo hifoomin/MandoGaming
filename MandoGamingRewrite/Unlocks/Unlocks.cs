@@ -15,12 +15,10 @@ namespace MandoGamingRewrite.Unlocks
         {
             if (localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex() && localUser.cachedBody.teamComponent.teamIndex == TeamIndex.Player)
             {
-                if (skill != localUser.cachedBody.skillLocator.primary)
+                if (skill == localUser.cachedBody.skillLocator.primary)
                 {
-                    if (primaryUseCount == 0)
-                    {
-                        primaryUseCount++;
-                    }
+                    // Main.MandoGamingLogger.LogFatal("Added primary skill usage");
+                    primaryUseCount++;
                 }
             }
 
@@ -49,6 +47,12 @@ namespace MandoGamingRewrite.Unlocks
             On.RoR2.CharacterBody.OnSkillActivated += CharacterBody_OnSkillActivated;
             TeleporterInteraction.onTeleporterChargedGlobal += TeleporterInteraction_onTeleporterChargedGlobal;
             Run.onRunStartGlobal += Run_onRunStartGlobal;
+            Stage.onServerStageBegin += Stage_onServerStageBegin;
+        }
+
+        private void Stage_onServerStageBegin(Stage obj)
+        {
+            primaryUseCount = 0;
         }
 
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
@@ -58,6 +62,7 @@ namespace MandoGamingRewrite.Unlocks
             On.RoR2.CharacterBody.OnSkillActivated -= CharacterBody_OnSkillActivated;
             TeleporterInteraction.onTeleporterChargedGlobal -= TeleporterInteraction_onTeleporterChargedGlobal;
             Run.onRunStartGlobal -= Run_onRunStartGlobal;
+            Stage.onServerStageBegin -= Stage_onServerStageBegin;
         }
     }
 
@@ -86,16 +91,14 @@ namespace MandoGamingRewrite.Unlocks
             var attackerBody = damageReport.attackerBody;
             if (attackerBody && localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex())
             {
-                Main.MandoGamingLogger.LogFatal("attackerBody exists and localUser.cachedBody.bodyIndex is Commando");
                 if (attackerBody == localUser.cachedBody)
                 {
-                    Main.MandoGamingLogger.LogFatal("attackerBody is localUser.cachedBody");
                     if (damageInfo.procChainMask.HasProc(ProcType.ChainLightning))
                     {
-                        Main.MandoGamingLogger.LogFatal("added to zap count");
+                        // Main.MandoGamingLogger.LogFatal("added to zap count");
                         zapCount++;
                     }
-                    if (zapCount >= 100)
+                    if (zapCount >= 70)
                     {
                         Grant();
                     }
@@ -109,6 +112,78 @@ namespace MandoGamingRewrite.Unlocks
             base.OnUninstall();
             GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
             Run.onRunStartGlobal -= Run_onRunStartGlobal;
+        }
+    }
+
+    public class PRFRVWildfireStormAchievement : BaseAchievement
+    {
+        private float igniteCount;
+
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        public override void OnInstall()
+        {
+            base.OnInstall();
+            GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
+            On.RoR2.GlobalEventManager.ProcIgniteOnKill += GlobalEventManager_ProcIgniteOnKill;
+            Run.onRunStartGlobal += Run_onRunStartGlobal;
+            Stage.onServerStageBegin += Stage_onServerStageBegin;
+        }
+
+        private void GlobalEventManager_ProcIgniteOnKill(On.RoR2.GlobalEventManager.orig_ProcIgniteOnKill orig, DamageReport damageReport, int igniteOnKillCount, CharacterBody victimBody, TeamIndex attackerTeamIndex)
+        {
+            if (igniteOnKillCount > 0)
+            {
+                // Main.MandoGamingLogger.LogFatal("Added to ProcIgniteOnKill igniteCount");
+                igniteCount++;
+            }
+            if (igniteCount >= 30)
+            {
+                Grant();
+            }
+            orig(damageReport, igniteOnKillCount, victimBody, attackerTeamIndex);
+        }
+
+        private void Stage_onServerStageBegin(Stage obj)
+        {
+            igniteCount = 0;
+        }
+
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void Run_onRunStartGlobal(Run obj)
+        {
+            igniteCount = 0;
+        }
+
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void GlobalEventManager_onServerDamageDealt(DamageReport damageReport)
+        {
+            var damageInfo = damageReport.damageInfo;
+            var attackerBody = damageReport.attackerBody;
+            if (attackerBody && localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex())
+            {
+                if (attackerBody == localUser.cachedBody)
+                {
+                    if ((damageInfo.damageType & DamageType.IgniteOnHit) == DamageType.IgniteOnHit)
+                    {
+                        // Main.MandoGamingLogger.LogFatal("Added to ServerDamageDealt igniteCount");
+                        igniteCount++;
+                    }
+                    if (igniteCount >= 30)
+                    {
+                        Grant();
+                    }
+                }
+            }
+        }
+
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        public override void OnUninstall()
+        {
+            base.OnUninstall();
+            GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
+            On.RoR2.GlobalEventManager.ProcIgniteOnKill -= GlobalEventManager_ProcIgniteOnKill;
+            Run.onRunStartGlobal -= Run_onRunStartGlobal;
+            Stage.onServerStageBegin -= Stage_onServerStageBegin;
         }
     }
 
@@ -132,10 +207,21 @@ namespace MandoGamingRewrite.Unlocks
         }
     }
 
+    [RegisterAchievement("CommandoPRFRVWildfireStorm", "Commando.Skills_PRFRVWildfireStorm", null, null)]
+    public class CommandoPRFRVWildfireStormAchievement : PRFRVWildfireStormAchievement
+    {
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        public override BodyIndex LookUpRequiredBodyIndex()
+        {
+            return BodyCatalog.FindBodyIndex("CommandoBody");
+        }
+    }
+
     public static class Unlocks
     {
         public static UnlockableDef heavyTap;
         public static UnlockableDef plasmaTap;
+        public static UnlockableDef prfrVWildfireStorm;
 
         public static void Create()
         {
@@ -144,19 +230,29 @@ namespace MandoGamingRewrite.Unlocks
             heavyTap.cachedName = "Commando.Skills_HeavyTap";
             heavyTap.nameToken = "ACHIEVEMENT_COMMANDOHEAVYTAP_NAME";
 
-            LanguageAPI.Add("ACHIEVEMENT_COMMANDOHEAVYTAP_NAME", "Commando: Still Here");
-            LanguageAPI.Add("ACHIEVEMENT_COMMANDOHEAVYTAP_DESCRIPTION", "As Commando, complete a Teleporter Event without using your Primary skill.");
+            LanguageAPI.Add("ACHIEVEMENT_COMMANDOHEAVYTAP_NAME", "Commando: Have a Blast");
+            LanguageAPI.Add("ACHIEVEMENT_COMMANDOHEAVYTAP_DESCRIPTION", "As Commando, complete a stage without using your Primary skill.");
 
             plasmaTap = ScriptableObject.CreateInstance<UnlockableDef>();
             plasmaTap.achievementIcon = Main.mandogaming.LoadAsset<Sprite>("PlasmaTap.png");
             plasmaTap.cachedName = "Commando.Skills_PlasmaTap";
             plasmaTap.nameToken = "ACHIEVEMENT_COMMANDOPLASMATAP_NAME";
 
-            LanguageAPI.Add("ACHIEVEMENT_COMMANDOPLASMATAP_NAME", "Commando: Flatline");
-            LanguageAPI.Add("ACHIEVEMENT_COMMANDOPLASMATAP_DESCRIPTION", "As Commando, zap enemies with chain lightning 100 times in a single run.");
+            LanguageAPI.Add("ACHIEVEMENT_COMMANDOPLASMATAP_NAME", "Commando: Arch Essence");
+            LanguageAPI.Add("ACHIEVEMENT_COMMANDOPLASMATAP_DESCRIPTION", "As Commando, chain lightning 70 times in a single run.");
 
-            Main.MandoGamingLogger.LogFatal("public static unlockableDef heavyTap in Unlocks class is " + heavyTap);
-            Main.MandoGamingLogger.LogFatal("public static unlockableDef plasmaTap in Unlocks class is " + plasmaTap);
+            prfrVWildfireStorm = ScriptableObject.CreateInstance<UnlockableDef>();
+            prfrVWildfireStorm.achievementIcon = Main.mandogaming.LoadAsset<Sprite>("PRFRVWildfireStorm.png");
+            prfrVWildfireStorm.cachedName = "Commando.Skills_PRFRVWildfireStorm";
+            prfrVWildfireStorm.nameToken = "ACHIEVEMENT_COMMANDOPRFRVWILDFIRESTORM_NAME";
+            prfrVWildfireStorm.sortScore = plasmaTap.sortScore + 1;
+
+            LanguageAPI.Add("ACHIEVEMENT_COMMANDOPRFRVWILDFIRESTORM_NAME", "Commando: Catch Fire");
+            LanguageAPI.Add("ACHIEVEMENT_COMMANDOPRFRVWILDFIRESTORM_DESCRIPTION", "As Commando, burn enemies 30 times on a single stage.");
+
+            ContentAddition.AddUnlockableDef(heavyTap);
+            ContentAddition.AddUnlockableDef(plasmaTap);
+            ContentAddition.AddUnlockableDef(prfrVWildfireStorm);
         }
     }
 }

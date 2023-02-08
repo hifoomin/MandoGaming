@@ -1,5 +1,4 @@
 ﻿using EntityStates;
-using MandoGaming.Skills;
 using R2API;
 using RoR2;
 using RoR2.Skills;
@@ -90,7 +89,7 @@ namespace MandoGaming
                 viewableNode = new ViewablesCatalog.Node(skillDef.skillNameToken, false, null)
             };
 
-            Main.MandoGamingLogger.LogFatal("public override UnlockableDef UnlockableDef => Unlocks.heavyTap is " + UnlockableDef);
+            // Main.MandoGamingLogger.LogFatal("public override UnlockableDef UnlockableDef => Unlocks.heavyTap is " + UnlockableDef);
 
             /*
             var networkStateMachine = commandoSkillLocator.gameObject.GetComponent<NetworkStateMachine>();
