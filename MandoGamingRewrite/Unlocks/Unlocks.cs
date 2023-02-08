@@ -13,9 +13,9 @@ namespace MandoGamingRewrite.Unlocks
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
         private void CharacterBody_OnSkillActivated(On.RoR2.CharacterBody.orig_OnSkillActivated orig, CharacterBody self, GenericSkill skill)
         {
-            if (self.bodyIndex == LookUpRequiredBodyIndex() && self.teamComponent.teamIndex == TeamIndex.Player)
+            if (localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex() && localUser.cachedBody.teamComponent.teamIndex == TeamIndex.Player)
             {
-                if (skill != self.skillLocator.primary)
+                if (skill != localUser.cachedBody.skillLocator.primary)
                 {
                     if (primaryUseCount == 0)
                     {
@@ -84,12 +84,15 @@ namespace MandoGamingRewrite.Unlocks
         {
             var damageInfo = damageReport.damageInfo;
             var attackerBody = damageReport.attackerBody;
-            if (attackerBody)
+            if (attackerBody && localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex())
             {
-                if (attackerBody.bodyIndex == LookUpRequiredBodyIndex())
+                Main.MandoGamingLogger.LogFatal("attackerBody exists and localUser.cachedBody.bodyIndex is Commando");
+                if (attackerBody == localUser.cachedBody)
                 {
+                    Main.MandoGamingLogger.LogFatal("attackerBody is localUser.cachedBody");
                     if (damageInfo.procChainMask.HasProc(ProcType.ChainLightning))
                     {
+                        Main.MandoGamingLogger.LogFatal("added to zap count");
                         zapCount++;
                     }
                     if (zapCount >= 100)
@@ -152,7 +155,8 @@ namespace MandoGamingRewrite.Unlocks
             LanguageAPI.Add("ACHIEVEMENT_COMMANDOPLASMATAP_NAME", "Commando: Flatline");
             LanguageAPI.Add("ACHIEVEMENT_COMMANDOPLASMATAP_DESCRIPTION", "As Commando, zap enemies with chain lightning 100 times in a single run.");
 
-            Main.MandoGamingLogger.LogFatal("unlockableDef heavyTap in Unlocks class is " + heavyTap);
+            Main.MandoGamingLogger.LogFatal("public static unlockableDef heavyTap in Unlocks class is " + heavyTap);
+            Main.MandoGamingLogger.LogFatal("public static unlockableDef plasmaTap in Unlocks class is " + plasmaTap);
         }
     }
 }

@@ -90,7 +90,7 @@ namespace MandoGaming
                 viewableNode = new ViewablesCatalog.Node(skillDef.skillNameToken, false, null)
             };
 
-            Main.MandoGamingLogger.LogFatal("UnlockableDef in SkillDefBase class is " + UnlockableDef);
+            Main.MandoGamingLogger.LogFatal("public override UnlockableDef UnlockableDef => Unlocks.heavyTap is " + UnlockableDef);
 
             /*
             var networkStateMachine = commandoSkillLocator.gameObject.GetComponent<NetworkStateMachine>();
