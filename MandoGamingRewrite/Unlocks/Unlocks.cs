@@ -131,15 +131,22 @@ namespace MandoGamingRewrite.Unlocks
 
         private void GlobalEventManager_ProcIgniteOnKill(On.RoR2.GlobalEventManager.orig_ProcIgniteOnKill orig, DamageReport damageReport, int igniteOnKillCount, CharacterBody victimBody, TeamIndex attackerTeamIndex)
         {
-            if (igniteOnKillCount > 0)
+            var attackerBody = damageReport.attackerBody;
+            if (attackerBody && localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex())
             {
-                // Main.MandoGamingLogger.LogFatal("Added to ProcIgniteOnKill igniteCount");
-                igniteCount++;
+                if (attackerBody == localUser.cachedBody)
+                {
+                    if (igniteOnKillCount > 0)
+                    {
+                        igniteCount++;
+                    }
+                    if (igniteCount >= 30)
+                    {
+                        Grant();
+                    }
+                }
             }
-            if (igniteCount >= 30)
-            {
-                Grant();
-            }
+
             orig(damageReport, igniteOnKillCount, victimBody, attackerTeamIndex);
         }
 
