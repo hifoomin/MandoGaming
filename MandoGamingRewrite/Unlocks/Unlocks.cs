@@ -13,8 +13,9 @@ namespace MandoGamingRewrite.Unlocks
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
         private void CharacterBody_OnSkillActivated(On.RoR2.CharacterBody.orig_OnSkillActivated orig, CharacterBody self, GenericSkill skill)
         {
-            if (localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex() && localUser.cachedBody.teamComponent.teamIndex == TeamIndex.Player)
+            if (localUser.cachedBody.name == "CommandoBody(Clone)" && localUser.cachedBody.teamComponent.teamIndex == TeamIndex.Player)
             {
+                // Main.MandoGamingLogger.LogFatal("OnSkillActivated cachedBody name is CommandoBody(Clone)");
                 if (skill == localUser.cachedBody.skillLocator.primary)
                 {
                     // Main.MandoGamingLogger.LogFatal("Added primary skill usage");
@@ -89,19 +90,17 @@ namespace MandoGamingRewrite.Unlocks
         {
             var damageInfo = damageReport.damageInfo;
             var attackerBody = damageReport.attackerBody;
-            if (attackerBody && localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex())
+            if (attackerBody && attackerBody.name == "CommandoBody(Clone)" && localUser.cachedBody.name == "CommandoBody(Clone)")
             {
-                if (attackerBody == localUser.cachedBody)
+                // Main.MandoGamingLogger.LogFatal("CHAIN LIGHTNING OnServerDamageDealt attackerBody.name and cachedBody name is CommandoBody(clone)");
+                if (damageInfo.procChainMask.HasProc(ProcType.ChainLightning))
                 {
-                    if (damageInfo.procChainMask.HasProc(ProcType.ChainLightning))
-                    {
-                        // Main.MandoGamingLogger.LogFatal("added to zap count");
-                        zapCount++;
-                    }
-                    if (zapCount >= 70)
-                    {
-                        Grant();
-                    }
+                    // Main.MandoGamingLogger.LogFatal("added to zap count");
+                    zapCount++;
+                }
+                if (zapCount >= 70)
+                {
+                    Grant();
                 }
             }
         }
@@ -132,18 +131,16 @@ namespace MandoGamingRewrite.Unlocks
         private void GlobalEventManager_ProcIgniteOnKill(On.RoR2.GlobalEventManager.orig_ProcIgniteOnKill orig, DamageReport damageReport, int igniteOnKillCount, CharacterBody victimBody, TeamIndex attackerTeamIndex)
         {
             var attackerBody = damageReport.attackerBody;
-            if (attackerBody && localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex())
+            if (attackerBody && attackerBody.name == "CommandoBody(Clone)" && localUser.cachedBody.name == "CommandoBody(Clone)")
             {
-                if (attackerBody == localUser.cachedBody)
+                // Main.MandoGamingLogger.LogFatal("ProcIgniteOnKill attackerBody.name and cachedBody name is CommandoBodY(cloenkeo)");
+                if (igniteOnKillCount > 0)
                 {
-                    if (igniteOnKillCount > 0)
-                    {
-                        igniteCount++;
-                    }
-                    if (igniteCount >= 30)
-                    {
-                        Grant();
-                    }
+                    igniteCount++;
+                }
+                if (igniteCount >= 30)
+                {
+                    Grant();
                 }
             }
 
@@ -166,19 +163,17 @@ namespace MandoGamingRewrite.Unlocks
         {
             var damageInfo = damageReport.damageInfo;
             var attackerBody = damageReport.attackerBody;
-            if (attackerBody && localUser.cachedBody.bodyIndex == LookUpRequiredBodyIndex())
+            if (attackerBody && attackerBody.name == "CommandoBody(Clone)" && localUser.cachedBody.name == "CommandoBody(Clone)")
             {
-                if (attackerBody == localUser.cachedBody)
+                // Main.MandoGamingLogger.LogFatal("IGNITE ON HIT OnServerDamageDealt attackerBody.name and cachedBody name is CommandoBody(clone)");
+                if ((damageInfo.damageType & DamageType.IgniteOnHit) == DamageType.IgniteOnHit)
                 {
-                    if ((damageInfo.damageType & DamageType.IgniteOnHit) == DamageType.IgniteOnHit)
-                    {
-                        // Main.MandoGamingLogger.LogFatal("Added to ServerDamageDealt igniteCount");
-                        igniteCount++;
-                    }
-                    if (igniteCount >= 30)
-                    {
-                        Grant();
-                    }
+                    // Main.MandoGamingLogger.LogFatal("Added to ServerDamageDealt igniteCount");
+                    igniteCount++;
+                }
+                if (igniteCount >= 30)
+                {
+                    Grant();
                 }
             }
         }
