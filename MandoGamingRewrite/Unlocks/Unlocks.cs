@@ -42,9 +42,9 @@ namespace MandoGamingRewrite.Unlocks
         }
 
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override void OnInstall()
+        public override void OnBodyRequirementMet()
         {
-            base.OnInstall();
+            base.OnBodyRequirementMet();
             On.RoR2.CharacterBody.OnSkillActivated += CharacterBody_OnSkillActivated;
             TeleporterInteraction.onTeleporterChargedGlobal += TeleporterInteraction_onTeleporterChargedGlobal;
             Run.onRunStartGlobal += Run_onRunStartGlobal;
@@ -57,9 +57,9 @@ namespace MandoGamingRewrite.Unlocks
         }
 
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override void OnUninstall()
+        public override void OnBodyRequirementBroken()
         {
-            base.OnUninstall();
+            base.OnBodyRequirementBroken();
             On.RoR2.CharacterBody.OnSkillActivated -= CharacterBody_OnSkillActivated;
             TeleporterInteraction.onTeleporterChargedGlobal -= TeleporterInteraction_onTeleporterChargedGlobal;
             Run.onRunStartGlobal -= Run_onRunStartGlobal;
@@ -72,9 +72,9 @@ namespace MandoGamingRewrite.Unlocks
         private float zapCount;
 
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override void OnInstall()
+        public override void OnBodyRequirementMet()
         {
-            base.OnInstall();
+            base.OnBodyRequirementMet();
             GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
             Run.onRunStartGlobal += Run_onRunStartGlobal;
         }
@@ -106,9 +106,9 @@ namespace MandoGamingRewrite.Unlocks
         }
 
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override void OnUninstall()
+        public override void OnBodyRequirementBroken()
         {
-            base.OnUninstall();
+            base.OnBodyRequirementBroken();
             GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
             Run.onRunStartGlobal -= Run_onRunStartGlobal;
         }
@@ -119,9 +119,9 @@ namespace MandoGamingRewrite.Unlocks
         private float igniteCount;
 
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override void OnInstall()
+        public override void OnBodyRequirementMet()
         {
-            base.OnInstall();
+            base.OnBodyRequirementMet();
             GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
             On.RoR2.GlobalEventManager.ProcIgniteOnKill += GlobalEventManager_ProcIgniteOnKill;
             Run.onRunStartGlobal += Run_onRunStartGlobal;
@@ -179,9 +179,9 @@ namespace MandoGamingRewrite.Unlocks
         }
 
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override void OnUninstall()
+        public override void OnBodyRequirementBroken()
         {
-            base.OnUninstall();
+            base.OnBodyRequirementBroken();
             GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
             On.RoR2.GlobalEventManager.ProcIgniteOnKill -= GlobalEventManager_ProcIgniteOnKill;
             Run.onRunStartGlobal -= Run_onRunStartGlobal;
