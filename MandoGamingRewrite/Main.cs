@@ -26,7 +26,7 @@ namespace MandoGaming
 
         public const string PluginAuthor = "HIFU";
         public const string PluginName = "MandoGaming";
-        public const string PluginVersion = "1.4.4";
+        public const string PluginVersion = "1.4.5";
 
         public static ConfigFile MandoGamingConfig;
         public static ManualLogSource MandoGamingLogger;
