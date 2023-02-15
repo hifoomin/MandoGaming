@@ -6,41 +6,12 @@ using UnityEngine;
 
 namespace MandoGamingRewrite.Unlocks
 {
+    [RegisterAchievement("CommandoHeavyTap", "Commando.Skills_HeavyTap", null, null)]
     public class HeavyTapAchievement : BaseAchievement
     {
         private int primaryUseCount;
-
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void CharacterBody_OnSkillActivated(On.RoR2.CharacterBody.orig_OnSkillActivated orig, CharacterBody self, GenericSkill skill)
-        {
-            if (localUser.cachedBody.name == "CommandoBody(Clone)" && localUser.cachedBody.teamComponent.teamIndex == TeamIndex.Player)
-            {
-                // Main.MandoGamingLogger.LogFatal("OnSkillActivated cachedBody name is CommandoBody(Clone)");
-                if (skill == localUser.cachedBody.skillLocator.primary)
-                {
-                    // Main.MandoGamingLogger.LogFatal("Added primary skill usage");
-                    primaryUseCount++;
-                }
-            }
-
-            orig(self, skill);
-        }
-
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void Run_onRunStartGlobal(Run obj)
-        {
-            primaryUseCount = 0;
-        }
-
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void TeleporterInteraction_onTeleporterChargedGlobal(TeleporterInteraction obj)
-        {
-            if (primaryUseCount == 0)
-            {
-                Grant();
-            }
-        }
-
+        public override BodyIndex LookUpRequiredBodyIndex() { return BodyCatalog.FindBodyIndex("CommandoBody"); }
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
         public override void OnBodyRequirementMet()
         {
@@ -50,27 +21,35 @@ namespace MandoGamingRewrite.Unlocks
             Run.onRunStartGlobal += Run_onRunStartGlobal;
             Stage.onServerStageBegin += Stage_onServerStageBegin;
         }
-
-        private void Stage_onServerStageBegin(Stage obj)
-        {
-            primaryUseCount = 0;
-        }
-
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
         public override void OnBodyRequirementBroken()
         {
-            base.OnBodyRequirementBroken();
             On.RoR2.CharacterBody.OnSkillActivated -= CharacterBody_OnSkillActivated;
             TeleporterInteraction.onTeleporterChargedGlobal -= TeleporterInteraction_onTeleporterChargedGlobal;
             Run.onRunStartGlobal -= Run_onRunStartGlobal;
             Stage.onServerStageBegin -= Stage_onServerStageBegin;
+            base.OnBodyRequirementBroken();
+        }
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void Run_onRunStartGlobal(Run obj) { primaryUseCount = 0; }
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void Stage_onServerStageBegin(Stage obj) { primaryUseCount = 0; }
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void TeleporterInteraction_onTeleporterChargedGlobal(TeleporterInteraction _) { if (primaryUseCount == 0) Grant(); }
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void CharacterBody_OnSkillActivated(On.RoR2.CharacterBody.orig_OnSkillActivated orig, CharacterBody self, GenericSkill skill)
+        {
+            if (localUser?.cachedBody != null && self == localUser.cachedBody && skill == localUser.cachedBody.skillLocator.primary) primaryUseCount++;
+            orig(self, skill);
         }
     }
 
+    [RegisterAchievement("CommandoPlasmaTap", "Commando.Skills_PlasmaTap", null, null)]
     public class PlasmaTapAchievement : BaseAchievement
     {
         private float zapCount;
-
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        public override BodyIndex LookUpRequiredBodyIndex() { return BodyCatalog.FindBodyIndex("CommandoBody"); }
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
         public override void OnBodyRequirementMet()
         {
@@ -78,46 +57,33 @@ namespace MandoGamingRewrite.Unlocks
             GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
             Run.onRunStartGlobal += Run_onRunStartGlobal;
         }
-
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void Run_onRunStartGlobal(Run obj)
-        {
-            zapCount = 0;
-        }
-
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void GlobalEventManager_onServerDamageDealt(DamageReport damageReport)
-        {
-            var damageInfo = damageReport.damageInfo;
-            var attackerBody = damageReport.attackerBody;
-            if (attackerBody && attackerBody.name == "CommandoBody(Clone)" && localUser.cachedBody.name == "CommandoBody(Clone)")
-            {
-                // Main.MandoGamingLogger.LogFatal("CHAIN LIGHTNING OnServerDamageDealt attackerBody.name and cachedBody name is CommandoBody(clone)");
-                if (damageInfo.procChainMask.HasProc(ProcType.ChainLightning))
-                {
-                    // Main.MandoGamingLogger.LogFatal("added to zap count");
-                    zapCount++;
-                }
-                if (zapCount >= 70)
-                {
-                    Grant();
-                }
-            }
-        }
-
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
         public override void OnBodyRequirementBroken()
         {
-            base.OnBodyRequirementBroken();
             GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
             Run.onRunStartGlobal -= Run_onRunStartGlobal;
+            base.OnBodyRequirementBroken();
+        }
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void Run_onRunStartGlobal(Run obj) { zapCount = 0; }
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void GlobalEventManager_onServerDamageDealt(DamageReport damageReport)
+        {
+            if (localUser?.cachedBody != null && localUser.cachedBody == damageReport.attackerBody)
+            {
+                // Main.MandoGamingLogger.LogFatal("CHAIN LIGHTNING OnServerDamageDealt attackerBody.name and cachedBody name is CommandoBody(clone)");
+                if (damageReport.damageInfo.procChainMask.HasProc(ProcType.ChainLightning)) zapCount++;
+                if (zapCount >= 70) Grant();
+            }
         }
     }
 
+    [RegisterAchievement("CommandoPRFRVWildfireStorm", "Commando.Skills_PRFRVWildfireStorm", null, null)]
     public class PRFRVWildfireStormAchievement : BaseAchievement
     {
         private float igniteCount;
-
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        public override BodyIndex LookUpRequiredBodyIndex() { return BodyCatalog.FindBodyIndex("CommandoBody"); }
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
         public override void OnBodyRequirementMet()
         {
@@ -127,95 +93,41 @@ namespace MandoGamingRewrite.Unlocks
             Run.onRunStartGlobal += Run_onRunStartGlobal;
             Stage.onServerStageBegin += Stage_onServerStageBegin;
         }
-
-        private void GlobalEventManager_ProcIgniteOnKill(On.RoR2.GlobalEventManager.orig_ProcIgniteOnKill orig, DamageReport damageReport, int igniteOnKillCount, CharacterBody victimBody, TeamIndex attackerTeamIndex)
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        public override void OnBodyRequirementBroken()
         {
-            var attackerBody = damageReport.attackerBody;
-            if (attackerBody && attackerBody.name == "CommandoBody(Clone)" && localUser.cachedBody.name == "CommandoBody(Clone)")
-            {
-                // Main.MandoGamingLogger.LogFatal("ProcIgniteOnKill attackerBody.name and cachedBody name is CommandoBodY(cloenkeo)");
-                if (igniteOnKillCount > 0)
-                {
-                    igniteCount++;
-                }
-                if (igniteCount >= 30)
-                {
-                    Grant();
-                }
-            }
-
-            orig(damageReport, igniteOnKillCount, victimBody, attackerTeamIndex);
+            GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
+            On.RoR2.GlobalEventManager.ProcIgniteOnKill -= GlobalEventManager_ProcIgniteOnKill;
+            Run.onRunStartGlobal -= Run_onRunStartGlobal;
+            Stage.onServerStageBegin -= Stage_onServerStageBegin;
+            base.OnBodyRequirementBroken();
         }
-
-        private void Stage_onServerStageBegin(Stage obj)
-        {
-            igniteCount = 0;
-        }
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void Run_onRunStartGlobal(Run obj) { igniteCount = 0; }
+        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void Stage_onServerStageBegin(Stage obj) { igniteCount = 0; }
 
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void Run_onRunStartGlobal(Run obj)
+        private void GlobalEventManager_ProcIgniteOnKill(On.RoR2.GlobalEventManager.orig_ProcIgniteOnKill orig, DamageReport damageReport, int igniteOnKillCount, CharacterBody victimBody, TeamIndex attackerTeamIndex)
         {
-            igniteCount = 0;
+            if (localUser?.cachedBody != null && localUser.cachedBody == damageReport.attackerBody)
+            {
+                // Main.MandoGamingLogger.LogFatal("ProcIgniteOnKill attackerBody.name and cachedBody name is CommandoBodY(cloenkeo)");
+                if (igniteOnKillCount > 0) igniteCount++;
+                if (igniteCount >= 30) Grant();
+            }
+            orig(damageReport, igniteOnKillCount, victimBody, attackerTeamIndex);
         }
 
         [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
         private void GlobalEventManager_onServerDamageDealt(DamageReport damageReport)
         {
-            var damageInfo = damageReport.damageInfo;
-            var attackerBody = damageReport.attackerBody;
-            if (attackerBody && attackerBody.name == "CommandoBody(Clone)" && localUser.cachedBody.name == "CommandoBody(Clone)")
+            if (localUser?.cachedBody != null && localUser.cachedBody == damageReport.attackerBody)
             {
                 // Main.MandoGamingLogger.LogFatal("IGNITE ON HIT OnServerDamageDealt attackerBody.name and cachedBody name is CommandoBody(clone)");
-                if ((damageInfo.damageType & DamageType.IgniteOnHit) == DamageType.IgniteOnHit)
-                {
-                    // Main.MandoGamingLogger.LogFatal("Added to ServerDamageDealt igniteCount");
-                    igniteCount++;
-                }
-                if (igniteCount >= 30)
-                {
-                    Grant();
-                }
+                if ((damageReport.damageInfo.damageType & DamageType.IgniteOnHit) != 0) igniteCount++;
+                if (igniteCount >= 30) Grant();
             }
-        }
-
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override void OnBodyRequirementBroken()
-        {
-            base.OnBodyRequirementBroken();
-            GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
-            On.RoR2.GlobalEventManager.ProcIgniteOnKill -= GlobalEventManager_ProcIgniteOnKill;
-            Run.onRunStartGlobal -= Run_onRunStartGlobal;
-            Stage.onServerStageBegin -= Stage_onServerStageBegin;
-        }
-    }
-
-    [RegisterAchievement("CommandoHeavyTap", "Commando.Skills_HeavyTap", null, null)]
-    public class CommandoHeavyTapAchievement : HeavyTapAchievement
-    {
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override BodyIndex LookUpRequiredBodyIndex()
-        {
-            return BodyCatalog.FindBodyIndex("CommandoBody");
-        }
-    }
-
-    [RegisterAchievement("CommandoPlasmaTap", "Commando.Skills_PlasmaTap", null, null)]
-    public class CommandoPlasmaTapAchievement : PlasmaTapAchievement
-    {
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override BodyIndex LookUpRequiredBodyIndex()
-        {
-            return BodyCatalog.FindBodyIndex("CommandoBody");
-        }
-    }
-
-    [RegisterAchievement("CommandoPRFRVWildfireStorm", "Commando.Skills_PRFRVWildfireStorm", null, null)]
-    public class CommandoPRFRVWildfireStormAchievement : PRFRVWildfireStormAchievement
-    {
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override BodyIndex LookUpRequiredBodyIndex()
-        {
-            return BodyCatalog.FindBodyIndex("CommandoBody");
         }
     }
 
