@@ -5,15 +5,38 @@ using UnityEngine;
 using RoR2.Skills;
 using RoR2;
 using RoR2.Orbs;
-using MandoGamingRewrite.Projectiles;
+using MandoGamingRewrite.VFX;
 using EntityStates.Commando.CommandoWeapon;
 using MandoGaming;
 using System.Linq;
 
-namespace MandoGamingRewrite.EntityStates
+namespace MandoGamingRewrite.CustomEntityStates
 {
     internal class PlasmaTapState : BaseSkillState, SteppedSkillDef.IStepSetter
     {
+        public float duration;
+
+        public static float baseDuration = 0.25f;
+
+        public static float maxRange = 100f;
+
+        public int pistol = 2;
+
+        private Ray aimRay;
+
+        public static float damageCoefficient = 1f;
+
+        public static float damageArcing = 0.3f;
+
+        public GameObject hitEffectPrefab = Resources.Load<GameObject>("prefabs/effects/impacteffects/LightningFlash");
+
+        public static string attackSoundString = "Play_item_proc_chain_lightning";
+        public static float recoilAmplitude = 1f;
+        private HurtBox initialOrbTarget;
+        private readonly BullseyeSearch search = new();
+        private ChildLocator childLocator;
+        private Transform modelTransform;
+
         void SteppedSkillDef.IStepSetter.SetStep(int i)
         {
             pistol = i;
@@ -111,7 +134,7 @@ namespace MandoGamingRewrite.EntityStates
                     minSpread = 0f,
                     maxSpread = 0f,
                     damage = damageCoefficient * damageStat,
-                    tracerEffectPrefab = PlasmaTapTracer.prefab,
+                    tracerEffectPrefab = PlasmaTapVFX.prefab,
                     muzzleName = targetMuzzle,
                     hitEffectPrefab = hitEffectPrefab,
                     isCrit = RollCrit(),
@@ -157,28 +180,5 @@ namespace MandoGamingRewrite.EntityStates
         {
             initialOrbTarget = reader.ReadHurtBoxReference().ResolveHurtBox();
         }
-
-        public float duration;
-
-        public static float baseDuration = 0.25f;
-
-        public static float maxRange = 100f;
-
-        public int pistol = 2;
-
-        private Ray aimRay;
-
-        public static float damageCoefficient = 1f;
-
-        public static float damageArcing = 0.3f;
-
-        public GameObject hitEffectPrefab = Resources.Load<GameObject>("prefabs/effects/impacteffects/LightningFlash");
-
-        public static string attackSoundString = "Play_item_proc_chain_lightning";
-        public static float recoilAmplitude = 1f;
-        private HurtBox initialOrbTarget;
-        private readonly BullseyeSearch search = new();
-        private ChildLocator childLocator;
-        private Transform modelTransform;
     }
 }

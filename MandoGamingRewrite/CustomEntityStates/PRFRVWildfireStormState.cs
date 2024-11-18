@@ -3,10 +3,58 @@ using EntityStates.Mage.Weapon;
 using RoR2;
 using UnityEngine;
 
-namespace MandoGamingRewrite.EntityStates
+namespace MandoGamingRewrite.CustomEntityStates
 {
     internal class PRFRVWildfireStormState : BaseState
     {
+        public static float baseFlameTimer = 1f;
+
+        public static float baseTickFrequency = 11f;
+
+        public static float tickDamage = 0.5f;
+
+        public static float tickProc = 1f;
+
+        public float force = 50f;
+
+        private float stopwatch;
+
+        public static float baseEntryTimer = 0.2f;
+
+        private float entryTimer;
+
+        private bool flameInitiated;
+
+        private float flameStopwatch;
+
+        private float tickFrequency;
+
+        private float flameTimer;
+
+        private static string startFlameAttackString = "Play_item_proc_fireRingTornado_start";
+
+        private static string endFlameAttackString = "Play_item_proc_fireRingTornado_end";
+
+        private ChildLocator childLocator;
+
+        private Transform leftFlame;
+
+        private Transform rightFlame;
+
+        private Transform leftMuzzle;
+
+        private Transform rightMuzzle;
+
+        private Transform transformer;
+
+        private Transform transformer2;
+
+        private bool isCrit;
+
+        private const float flameDistance = 20f;
+
+        public static float recoilForce = 290f;
+
         public override void OnEnter()
         {
             base.OnEnter();
@@ -148,53 +196,5 @@ namespace MandoGamingRewrite.EntityStates
         {
             return InterruptPriority.PrioritySkill;
         }
-
-        public static float baseFlameTimer = 1f;
-
-        public static float baseTickFrequency = 11f;
-
-        public static float tickDamage = 0.5f;
-
-        public static float tickProc = 1f;
-
-        public float force = 50f;
-
-        private float stopwatch;
-
-        public static float baseEntryTimer = 0.2f;
-
-        private float entryTimer;
-
-        private bool flameInitiated;
-
-        private float flameStopwatch;
-
-        private float tickFrequency;
-
-        private float flameTimer;
-
-        private static string startFlameAttackString = "Play_item_proc_fireRingTornado_start";
-
-        private static string endFlameAttackString = "Play_item_proc_fireRingTornado_end";
-
-        private ChildLocator childLocator;
-
-        private Transform leftFlame;
-
-        private Transform rightFlame;
-
-        private Transform leftMuzzle;
-
-        private Transform rightMuzzle;
-
-        private Transform transformer;
-
-        private Transform transformer2;
-
-        private bool isCrit;
-
-        private const float flameDistance = 20f;
-
-        public static float recoilForce = 290f;
     }
 }

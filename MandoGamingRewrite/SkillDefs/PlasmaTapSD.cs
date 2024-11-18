@@ -1,12 +1,11 @@
 ﻿using EntityStates;
 using RoR2;
 using UnityEngine;
-using MandoGamingRewrite.EntityStates;
-using MandoGamingRewrite.Unlocks;
+using MandoGamingRewrite.CustomEntityStates;
 
 namespace MandoGaming.Skills
 {
-    public class PlasmaTapSD : SkillDefBase
+    public class PlasmaTapSD : SkillDefBase<PlasmaTapSD>
     {
         public override string NameToken => "PLASMATAP";
 
@@ -36,7 +35,7 @@ namespace MandoGaming.Skills
 
         public override int RechargeStock => 1;
 
-        public override Sprite Icon => Main.mandogaming.LoadAsset<Sprite>("PlasmaTap.png");
+        public override Sprite Icon => Main.bundle.LoadAsset<Sprite>("PlasmaTap.png");
 
         public override int StockToConsume => 0;
 
@@ -45,6 +44,6 @@ namespace MandoGaming.Skills
         public override int RequiredStock => 1;
 
         public override SkillSlot SkillSlot => SkillSlot.Primary;
-        public override UnlockableDef UnlockableDef => Unlocks.plasmaTap;
+        public override UnlockableDef UnlockableDef => null;
     }
 }

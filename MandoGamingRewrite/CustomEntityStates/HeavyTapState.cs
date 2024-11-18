@@ -1,13 +1,27 @@
 ﻿using EntityStates;
 using EntityStates.Commando.CommandoWeapon;
-using MandoGamingRewrite.Projectiles;
+using MandoGamingRewrite.VFX;
 using RoR2;
 using UnityEngine;
 
-namespace MandoGamingRewrite.EntityStates
+namespace MandoGamingRewrite.CustomEntityStates
 {
     internal class HeavyTapState : BaseSkillState
     {
+        public float duration;
+        public static float baseDuration = 0.15f;
+        public static float secondDuration = 0.35f;
+        public int remainingShots = 2;
+        public bool finalShot = false;
+        public static string fireHeavyPistolSoundString = "play_bandit_M2_shot";
+        public GameObject tracerEffectPrefab = HeavyTapVFX.prefab;
+        public GameObject hitEffectPrefab = Resources.Load<GameObject>("prefabs/effects/impacteffects/Hitspark1");
+        public static float recoilAmplitude = 1f;
+        private Ray aimRay;
+        public static float maxRange = 250f;
+        public static float damageCoefficient = 1.55f;
+        public static float force = 40f;
+
         public override void OnEnter()
         {
             base.OnEnter();
@@ -94,19 +108,5 @@ namespace MandoGamingRewrite.EntityStates
         {
             return InterruptPriority.Skill;
         }
-
-        public float duration;
-        public static float baseDuration = 0.15f;
-        public static float secondDuration = 0.35f;
-        public int remainingShots = 2;
-        public bool finalShot = false;
-        public static string fireHeavyPistolSoundString = "play_bandit_M2_shot";
-        public GameObject tracerEffectPrefab = HeavyTapTracer.prefab;
-        public GameObject hitEffectPrefab = Resources.Load<GameObject>("prefabs/effects/impacteffects/Hitspark1");
-        public static float recoilAmplitude = 1f;
-        private Ray aimRay;
-        public static float maxRange = 250f;
-        public static float damageCoefficient = 1.55f;
-        public static float force = 40f;
     }
 }

@@ -3,13 +3,13 @@ using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace MandoGamingRewrite.Projectiles
+namespace MandoGamingRewrite.VFX
 {
-    public static class HeavyTapTracer
+    public static class HeavyTapVFX
     {
         public static GameObject prefab;
 
-        public static void Create()
+        public static void Init()
         {
             prefab = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Junk/Bandit/TracerBanditShotgun.prefab").WaitForCompletion(), "HeavyTapTracer", false);
 

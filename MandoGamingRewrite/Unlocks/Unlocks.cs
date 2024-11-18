@@ -1,4 +1,5 @@
-﻿using MandoGaming;
+﻿/*
+using MandoGaming;
 using R2API;
 using RoR2;
 using RoR2.Achievements;
@@ -10,9 +11,10 @@ namespace MandoGamingRewrite.Unlocks
     public class HeavyTapAchievement : BaseAchievement
     {
         private int primaryUseCount;
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override BodyIndex LookUpRequiredBodyIndex() { return BodyCatalog.FindBodyIndex("CommandoBody"); }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+
+        public override BodyIndex LookUpRequiredBodyIndex()
+        { return BodyCatalog.FindBodyIndex("CommandoBody"); }
+
         public override void OnBodyRequirementMet()
         {
             base.OnBodyRequirementMet();
@@ -21,7 +23,7 @@ namespace MandoGamingRewrite.Unlocks
             Run.onRunStartGlobal += Run_onRunStartGlobal;
             Stage.onServerStageBegin += Stage_onServerStageBegin;
         }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+
         public override void OnBodyRequirementBroken()
         {
             On.RoR2.CharacterBody.OnSkillActivated -= CharacterBody_OnSkillActivated;
@@ -30,13 +32,16 @@ namespace MandoGamingRewrite.Unlocks
             Stage.onServerStageBegin -= Stage_onServerStageBegin;
             base.OnBodyRequirementBroken();
         }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void Run_onRunStartGlobal(Run obj) { primaryUseCount = 0; }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void Stage_onServerStageBegin(Stage obj) { primaryUseCount = 0; }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void TeleporterInteraction_onTeleporterChargedGlobal(TeleporterInteraction _) { if (primaryUseCount == 0) Grant(); }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+
+        private void Run_onRunStartGlobal(Run obj)
+        { primaryUseCount = 0; }
+
+        private void Stage_onServerStageBegin(Stage obj)
+        { primaryUseCount = 0; }
+
+        private void TeleporterInteraction_onTeleporterChargedGlobal(TeleporterInteraction _)
+        { if (primaryUseCount == 0) Grant(); }
+
         private void CharacterBody_OnSkillActivated(On.RoR2.CharacterBody.orig_OnSkillActivated orig, CharacterBody self, GenericSkill skill)
         {
             if (localUser?.cachedBody != null && self == localUser.cachedBody && skill == localUser.cachedBody.skillLocator.primary) primaryUseCount++;
@@ -48,25 +53,27 @@ namespace MandoGamingRewrite.Unlocks
     public class PlasmaTapAchievement : BaseAchievement
     {
         private float zapCount;
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override BodyIndex LookUpRequiredBodyIndex() { return BodyCatalog.FindBodyIndex("CommandoBody"); }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+
+        public override BodyIndex LookUpRequiredBodyIndex()
+        { return BodyCatalog.FindBodyIndex("CommandoBody"); }
+
         public override void OnBodyRequirementMet()
         {
             base.OnBodyRequirementMet();
             GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
             Run.onRunStartGlobal += Run_onRunStartGlobal;
         }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+
         public override void OnBodyRequirementBroken()
         {
             GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
             Run.onRunStartGlobal -= Run_onRunStartGlobal;
             base.OnBodyRequirementBroken();
         }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void Run_onRunStartGlobal(Run obj) { zapCount = 0; }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+
+        private void Run_onRunStartGlobal(Run obj)
+        { zapCount = 0; }
+
         private void GlobalEventManager_onServerDamageDealt(DamageReport damageReport)
         {
             if (localUser?.cachedBody != null && localUser.cachedBody == damageReport.attackerBody)
@@ -82,9 +89,10 @@ namespace MandoGamingRewrite.Unlocks
     public class PRFRVWildfireStormAchievement : BaseAchievement
     {
         private float igniteCount;
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        public override BodyIndex LookUpRequiredBodyIndex() { return BodyCatalog.FindBodyIndex("CommandoBody"); }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+
+        public override BodyIndex LookUpRequiredBodyIndex()
+        { return BodyCatalog.FindBodyIndex("CommandoBody"); }
+
         public override void OnBodyRequirementMet()
         {
             base.OnBodyRequirementMet();
@@ -93,7 +101,7 @@ namespace MandoGamingRewrite.Unlocks
             Run.onRunStartGlobal += Run_onRunStartGlobal;
             Stage.onServerStageBegin += Stage_onServerStageBegin;
         }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+
         public override void OnBodyRequirementBroken()
         {
             GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
@@ -102,12 +110,13 @@ namespace MandoGamingRewrite.Unlocks
             Stage.onServerStageBegin -= Stage_onServerStageBegin;
             base.OnBodyRequirementBroken();
         }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void Run_onRunStartGlobal(Run obj) { igniteCount = 0; }
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
-        private void Stage_onServerStageBegin(Stage obj) { igniteCount = 0; }
 
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
+        private void Run_onRunStartGlobal(Run obj)
+        { igniteCount = 0; }
+
+        private void Stage_onServerStageBegin(Stage obj)
+        { igniteCount = 0; }
+
         private void GlobalEventManager_ProcIgniteOnKill(On.RoR2.GlobalEventManager.orig_ProcIgniteOnKill orig, DamageReport damageReport, int igniteOnKillCount, CharacterBody victimBody, TeamIndex attackerTeamIndex)
         {
             if (localUser?.cachedBody != null && localUser.cachedBody == damageReport.attackerBody)
@@ -119,7 +128,6 @@ namespace MandoGamingRewrite.Unlocks
             orig(damageReport, igniteOnKillCount, victimBody, attackerTeamIndex);
         }
 
-        [SystemInitializer(typeof(HG.Reflection.SearchableAttribute.OptInAttribute))]
         private void GlobalEventManager_onServerDamageDealt(DamageReport damageReport)
         {
             if (localUser?.cachedBody != null && localUser.cachedBody == damageReport.attackerBody)
@@ -137,10 +145,10 @@ namespace MandoGamingRewrite.Unlocks
         public static UnlockableDef plasmaTap;
         public static UnlockableDef prfrVWildfireStorm;
 
-        public static void Create()
+        public static void Init()
         {
             heavyTap = ScriptableObject.CreateInstance<UnlockableDef>();
-            heavyTap.achievementIcon = Main.mandogaming.LoadAsset<Sprite>("HeavyTap.png");
+            heavyTap.achievementIcon = Main.bundle.LoadAsset<Sprite>("HeavyTap.png");
             heavyTap.cachedName = "Commando.Skills_HeavyTap";
             heavyTap.nameToken = "ACHIEVEMENT_COMMANDOHEAVYTAP_NAME";
 
@@ -148,7 +156,7 @@ namespace MandoGamingRewrite.Unlocks
             LanguageAPI.Add("ACHIEVEMENT_COMMANDOHEAVYTAP_DESCRIPTION", "As Commando, complete a stage without using your Primary skill.");
 
             plasmaTap = ScriptableObject.CreateInstance<UnlockableDef>();
-            plasmaTap.achievementIcon = Main.mandogaming.LoadAsset<Sprite>("PlasmaTap.png");
+            plasmaTap.achievementIcon = Main.bundle.LoadAsset<Sprite>("PlasmaTap.png");
             plasmaTap.cachedName = "Commando.Skills_PlasmaTap";
             plasmaTap.nameToken = "ACHIEVEMENT_COMMANDOPLASMATAP_NAME";
 
@@ -156,7 +164,7 @@ namespace MandoGamingRewrite.Unlocks
             LanguageAPI.Add("ACHIEVEMENT_COMMANDOPLASMATAP_DESCRIPTION", "As Commando, chain lightning 70 times in a single run.");
 
             prfrVWildfireStorm = ScriptableObject.CreateInstance<UnlockableDef>();
-            prfrVWildfireStorm.achievementIcon = Main.mandogaming.LoadAsset<Sprite>("PRFRVWildfireStorm.png");
+            prfrVWildfireStorm.achievementIcon = Main.bundle.LoadAsset<Sprite>("PRFRVWildfireStorm.png");
             prfrVWildfireStorm.cachedName = "Commando.Skills_PRFRVWildfireStorm";
             prfrVWildfireStorm.nameToken = "ACHIEVEMENT_COMMANDOPRFRVWILDFIRESTORM_NAME";
             prfrVWildfireStorm.sortScore = plasmaTap.sortScore + 1;
@@ -170,3 +178,4 @@ namespace MandoGamingRewrite.Unlocks
         }
     }
 }
+*/

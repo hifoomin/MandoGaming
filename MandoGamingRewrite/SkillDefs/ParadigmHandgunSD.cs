@@ -1,19 +1,19 @@
 ﻿using EntityStates;
+using MandoGamingRewrite.CustomEntityStates;
 using RoR2;
 using UnityEngine;
-using MandoGamingRewrite.CustomEntityStates;
 
 namespace MandoGaming.Skills
 {
-    public class HeavyTapSD : SkillDefBase<HeavyTapSD>
+    public class ParadigmHandgunSD : SkillDefBase<ParadigmHandgunSD>
     {
-        public override string NameToken => "HEAVYTAP";
+        public override string NameToken => "PARADIGMHANDGUN";
 
-        public override string NameText => "Heavy Tap";
+        public override string NameText => "Paradigm Handgun";
 
-        public override string DescriptionText => "<style=cIsDamage>Frictionless</style>. Shoot twice for <style=cIsDamage>2x155% damage</style>.";
+        public override string DescriptionText => "Fire off a spread of <style=cIsDamage>4</style> slugs for <style=cIsDamage>200% damage</style> each.";
 
-        public override SerializableEntityStateType ActivationState => new(typeof(HeavyTapState));
+        public override SerializableEntityStateType ActivationState => new(typeof(ParadigmHandgunState));
 
         public override string ActivationStateMachineName => "Weapon";
 
@@ -21,7 +21,7 @@ namespace MandoGaming.Skills
 
         public override float BaseRechargeInterval => 1f;
 
-        public override bool BeginSkillCooldownOnSkillEnd => true;
+        public override bool BeginSkillCooldownOnSkillEnd => false;
 
         public override bool CanceledFromSprinting => false;
 
@@ -33,13 +33,13 @@ namespace MandoGaming.Skills
 
         public override bool MustKeyPress => false;
 
-        public override int RechargeStock => 0;
+        public override int RechargeStock => 1;
 
-        public override Sprite Icon => Main.bundle.LoadAsset<Sprite>("HeavyTap.png");
+        public override Sprite Icon => Main.bundle.LoadAsset<Sprite>("PlasmaTap.png");
 
         public override int StockToConsume => 0;
 
-        public override string[] KeywordTokens => new string[] { "KEYWORD_FRICTIONLESS" };
+        public override string[] KeywordTokens => null;
         public override bool ResetCooldownTimerOnUse => true;
         public override int RequiredStock => 1;
 
